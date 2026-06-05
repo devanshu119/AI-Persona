@@ -2,23 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies for PyMuPDF and WeasyPrint
-RUN apt-get update && apt-get install -y \
-    libffi-dev \
-    libcairo2 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libgdk-pixbuf2.0-0 \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
-
+# No extra system packages needed — PyMuPDF uses pre-built wheels,
+# weasyprint was removed from requirements.txt
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Create __init__.py files
-RUN touch rag/__init__.py calendar/__init__.py ingest/__init__.py
+# Ensure package __init__.py files exist
+RUN touch rag/__init__.py calcom/__init__.py ingest/__init__.py
 
 EXPOSE 8000
 
