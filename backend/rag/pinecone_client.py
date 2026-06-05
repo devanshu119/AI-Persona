@@ -57,16 +57,35 @@ def get_vector_store(namespace: str = "resume") -> PineconeVectorStore:
 
 def get_retriever(namespaces: list[str] = None, k: int = 6):
     """Search across multiple Pinecone namespaces and merge results."""
-    from langchain_community.retrievers.merger_retriever import MergerRetriever
-
     if namespaces is None:
         namespaces = ["resume", "github"]
 
-    retrievers = []
-    for ns in namespaces:
-        vs = get_vector_store(namespace=ns)
-        retrievers.append(vs.as_retriever(search_kwargs={"k": k // len(namespaces)}))
+    retrievers = [
+        get_vector_store(namespace=ns).as_retriever(
+            search_kwargs={"k": max(1, k // len(namespaces))}
+        )
+        for ns in namespaces
+    ]
 
     if len(retrievers) == 1:
         return retrievers[0]
-    return MergerRetriever(retrievers=retrievers)
+
+    # Simple combined retriever — no external dependency needed
+    from langchain_core.retrievers import BaseRetriever
+    from langchain_core.documents import Document
+    from langchain_core.callbacks import CallbackManagerForRetrieverRun
+    from typing import List
+
+    class MultiNamespaceRetriever(BaseRetriever):
+        retrievers: list
+
+        def _get_relevant_documents(
+            self, query: str, *, run_manager: CallbackManagerForRetrieverRun
+        ) -> List[Document]:
+            docs = []
+            for r in self.retrievers:
+                docs.extend(r.invoke(query))
+            return docs
+
+    return MultiNamespaceRetriever(retrievers=retrievers)
+
