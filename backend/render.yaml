@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: devanshu-ai-persona-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX_NAME
+        value: devanshu-persona
+      - key: CALCOM_API_KEY
+        sync: false
+      - key: CALCOM_EVENT_TYPE_ID
+        sync: false
+      - key: CALCOM_USERNAME
+        value: devanshu
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_USERNAME
+        value: devanshu119
+      - key: FRONTEND_URL
+        sync: false

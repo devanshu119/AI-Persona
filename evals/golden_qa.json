@@ -1,0 +1,122 @@
+[
+  {
+    "id": "q1",
+    "question": "Where did Devanshu intern and what did he build there?",
+    "ground_truth": "Devanshu interned at Planto.ai from February to June 2025. He built a VSCode coding assistant using LLM APIs with features like code completion, context-aware suggestions, and inline documentation. This was deployed to 3 enterprise clients, cutting developer context-switching by ~30%.",
+    "category": "experience"
+  },
+  {
+    "id": "q2",
+    "question": "What is Devanshu's educational background?",
+    "ground_truth": "Devanshu is currently pursuing a B.Tech in Computer Science and Engineering at the Indian Institute of Information Technology (IIIT) Una, with an expected graduation in June 2027. His GPA is 7.0.",
+    "category": "education"
+  },
+  {
+    "id": "q3",
+    "question": "How did Devanshu reduce hallucination in the RAG system at Planto.ai?",
+    "ground_truth": "Devanshu built RAG preprocessing workflows including chunking, embedding generation, and vector store indexing. These improvements reduced retrieval hallucination by approximately 25% on enterprise codebase queries.",
+    "category": "experience"
+  },
+  {
+    "id": "q4",
+    "question": "What models did Devanshu use for oil spill detection?",
+    "ground_truth": "Devanshu trained U-Net, DeepLabv3, and CNN models on SAR (Synthetic Aperture Radar) satellite datasets for oil spill detection. He achieved greater than 90% IoU and deployed the model via Streamlit with real-time segmentation mask overlay.",
+    "category": "projects"
+  },
+  {
+    "id": "q5",
+    "question": "What is Devanshu's Codeforces rating and how many DSA problems has he solved?",
+    "ground_truth": "Devanshu has a Codeforces rating of 1300+ and holds the Pupil rank. He has solved 500+ DSA problems across LeetCode and Codeforces.",
+    "category": "achievements"
+  },
+  {
+    "id": "q6",
+    "question": "What tech stack did Devanshu use for the stock volatility forecasting project?",
+    "ground_truth": "Devanshu used Python, TensorFlow, Keras, Pandas, NumPy, and Matplotlib for the stock price volatility forecasting project. He built an LSTM/GRU pipeline that outperformed GARCH baselines by 18% on MAE.",
+    "category": "projects"
+  },
+  {
+    "id": "q7",
+    "question": "What CI/CD work did Devanshu do at Planto.ai?",
+    "ground_truth": "Devanshu designed CI/CD pipelines for LLM model integration at Planto.ai, reducing deployment time by approximately 40% and maintaining reproducible builds across staging and production environments.",
+    "category": "experience"
+  },
+  {
+    "id": "q8",
+    "question": "What features did Devanshu engineer for the stock forecasting model?",
+    "ground_truth": "Devanshu engineered financial features including the Garman-Klass volatility estimator, Bollinger Bands, RSI (Relative Strength Index), and rolling standard deviation. He evaluated models using MAE, RMSE, and directional accuracy metrics.",
+    "category": "projects"
+  },
+  {
+    "id": "q9",
+    "question": "How many enterprise partners did Devanshu gather requirements from at Planto.ai?",
+    "ground_truth": "Devanshu gathered requirements from 5 or more enterprise partners at Planto.ai. He produced ML feature specs and Cloud integration roadmaps with defined acceptance criteria.",
+    "category": "experience"
+  },
+  {
+    "id": "q10",
+    "question": "What was Devanshu's rank in the IIIT Una ICPC-style competition?",
+    "ground_truth": "Devanshu ranked 3rd out of more than 30 teams in the IIIT Una intra-college ICPC-style programming competition.",
+    "category": "achievements"
+  },
+  {
+    "id": "q11",
+    "question": "What LLM fine-tuning work did Devanshu do?",
+    "ground_truth": "Devanshu fine-tuned Planto's proprietary LLM on 500+ curated instruction-response pairs, improving task accuracy by 15% over the base model on domain-specific benchmarks.",
+    "category": "experience"
+  },
+  {
+    "id": "q12",
+    "question": "What was Devanshu's JEE Advanced rank?",
+    "ground_truth": "Devanshu achieved AIR 11,XXX (approximately 11 thousand something) in JEE Advanced 2023. He was also in the 98th percentile in JEE Mains 2023.",
+    "category": "achievements"
+  },
+  {
+    "id": "q13",
+    "question": "What Python libraries does Devanshu know for ML and deep learning?",
+    "ground_truth": "Devanshu is proficient in TensorFlow, Keras, PyTorch, Scikit-learn, Pandas, NumPy, OpenCV, Librosa, and Matplotlib for ML and deep learning tasks.",
+    "category": "skills"
+  },
+  {
+    "id": "q14",
+    "question": "What does the video scraping tool Devanshu built do?",
+    "ground_truth": "Devanshu built a video scraping tool that automates scraping of YouTube video and playlist metadata. It uses youtube-dl, BeautifulSoup, and ScraperAPI for anti-bot bypass, capable of processing 1,000+ records. Output is structured JSON with consistent naming conventions.",
+    "category": "projects"
+  },
+  {
+    "id": "q15",
+    "question": "Why is Devanshu a strong fit for an AI Engineer role at Scaler?",
+    "ground_truth": "Devanshu has direct production experience in LLM systems and RAG pipelines, having shipped a VSCode coding assistant to 3 enterprise clients and reduced retrieval hallucination by 25% at Planto.ai. He has fine-tuned proprietary LLMs (15% accuracy improvement), built CI/CD pipelines for ML (40% faster deployment), and has strong fundamentals in Python, FastAPI, and MLOps. His competitive programming background (1300+ Codeforces) demonstrates strong problem-solving ability.",
+    "category": "fit"
+  },
+  {
+    "id": "q16",
+    "question": "What data augmentation techniques did Devanshu use in the oil spill project?",
+    "ground_truth": "Devanshu applied data augmentation and transfer learning on the limited SAR satellite dataset to improve test-set robustness by 20%. He also added post-processing for spill area estimation and distance mapping.",
+    "category": "projects"
+  },
+  {
+    "id": "q17",
+    "question": "What backend frameworks does Devanshu use?",
+    "ground_truth": "Devanshu uses FastAPI and Streamlit as his primary backend frameworks. He also has experience with Node.js and Next.js from his work at Planto.ai. He is familiar with Docker and has worked with Git and GitHub Actions for CI/CD.",
+    "category": "skills"
+  },
+  {
+    "id": "q18",
+    "question": "What is Devanshu's GitHub username?",
+    "ground_truth": "Devanshu's GitHub username is devanshu119. His profile can be found at https://github.com/devanshu119.",
+    "category": "contact"
+  },
+  {
+    "id": "q19",
+    "question": "What cloud platforms is Devanshu familiar with?",
+    "ground_truth": "Devanshu is familiar with AWS (Amazon Web Services). He also has experience with CI/CD pipelines and GitHub Actions for MLOps workflows.",
+    "category": "skills"
+  },
+  {
+    "id": "q20",
+    "question": "What scientific competitions has Devanshu qualified for?",
+    "ground_truth": "Devanshu qualified for IOQM Paper A in 2023 (Indian Olympiad Qualifier in Mathematics) and was in the State Top 1% in NSEA (National Standard Examination in Astronomy) in 2019.",
+    "category": "achievements"
+  }
+]
