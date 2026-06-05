@@ -6,8 +6,8 @@ import sys
 from pathlib import Path
 
 import fitz  # PyMuPDF
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 
 # Add parent dir to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))

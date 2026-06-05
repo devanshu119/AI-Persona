@@ -1,13 +1,14 @@
 """
-Pinecone vector store client initialisation.
+Pinecone vector store client — uses Cohere embeddings (free tier, 1024-dim).
+Matches existing Pinecone index configured for 1024 dimensions.
 """
 import os
 from pinecone import Pinecone, ServerlessSpec
-from langchain_openai import OpenAIEmbeddings
+from langchain_cohere import CohereEmbeddings
 from langchain_pinecone import PineconeVectorStore
 
 _pc: Pinecone | None = None
-_embeddings: OpenAIEmbeddings | None = None
+_embeddings: CohereEmbeddings | None = None
 
 
 def get_pinecone_client() -> Pinecone:
@@ -17,13 +18,12 @@ def get_pinecone_client() -> Pinecone:
     return _pc
 
 
-def get_embeddings() -> OpenAIEmbeddings:
+def get_embeddings() -> CohereEmbeddings:
     global _embeddings
     if _embeddings is None:
-        _embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            dimensions=1024,  # Match existing Pinecone index dimension
-            openai_api_key=os.environ["OPENAI_API_KEY"],
+        _embeddings = CohereEmbeddings(
+            model="embed-english-v3.0",  # 1024-dim, matches Pinecone index
+            cohere_api_key=os.environ["COHERE_API_KEY"],
         )
     return _embeddings
 
@@ -35,7 +35,7 @@ def get_or_create_index(index_name: str) -> None:
     if index_name not in existing:
         pc.create_index(
             name=index_name,
-            dimension=1024,  # text-embedding-3-small with custom dimensions=1024
+            dimension=1024,  # Cohere embed-english-v3.0 dimension
             metric="cosine",
             spec=ServerlessSpec(cloud="aws", region="us-east-1"),
         )
@@ -56,11 +56,8 @@ def get_vector_store(namespace: str = "resume") -> PineconeVectorStore:
 
 
 def get_retriever(namespaces: list[str] = None, k: int = 6):
-    """
-    Returns a retriever that searches across multiple namespaces.
-    Merges results from resume + github namespaces for richer context.
-    """
-    from langchain.retrievers import MergerRetriever
+    """Search across multiple Pinecone namespaces and merge results."""
+    from langchain_community.retrievers.merger_retriever import MergerRetriever
 
     if namespaces is None:
         namespaces = ["resume", "github"]

@@ -32,7 +32,7 @@ def main():
     print("=" * 60)
 
     # Validate required env vars
-    required = ["OPENAI_API_KEY", "PINECONE_API_KEY", "PINECONE_INDEX_NAME"]
+    required = ["GROQ_API_KEY", "COHERE_API_KEY", "PINECONE_API_KEY", "PINECONE_INDEX_NAME"]
     missing = [k for k in required if not os.environ.get(k)]
     if missing:
         print(f"ERROR: Missing environment variables: {missing}")
@@ -41,13 +41,13 @@ def main():
 
     print("\n[1/2] Ingesting Resume...")
     resume_count = ingest_resume(args.resume)
-    print(f"✓ Resume: {resume_count} chunks ingested")
+    print(f"[OK] Resume: {resume_count} chunks ingested")
 
     print("\n[2/2] Ingesting GitHub Repositories...")
     github_token = os.environ.get("GITHUB_TOKEN")
     github_username = os.environ.get("GITHUB_USERNAME", "devanshu119")
     github_count = ingest_github(github_token, github_username)
-    print(f"✓ GitHub: {github_count} chunks ingested")
+    print(f"[OK] GitHub: {github_count} chunks ingested")
 
     print("\n" + "=" * 60)
     print(f"INGESTION COMPLETE")

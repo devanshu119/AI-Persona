@@ -9,8 +9,8 @@ import time
 from pathlib import Path
 
 from github import Github, GithubException
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from rag.pinecone_client import get_vector_store, get_or_create_index
@@ -166,7 +166,7 @@ def get_fallback_documents() -> list[Document]:
     for repo_data in FALLBACK_REPO_DOCS:
         chunks = splitter.create_documents(
             [repo_data["content"]],
-            metadatas={"source": f"github:{repo_data['repo']}", "type": "github_fallback"},
+            metadatas=[{"source": f"github:{repo_data['repo']}", "type": "github_fallback"}],
         )
         docs.extend(chunks)
     return docs

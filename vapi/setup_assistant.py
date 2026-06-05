@@ -123,8 +123,8 @@ def create_assistant(vapi_key: str, backend_url: str) -> dict:
     payload = {
         "name": "Devanshu AI Representative",
         "model": {
-            "provider": "openai",
-            "model": "gpt-4o-mini",
+            "provider": "groq",
+            "model": "llama-3.1-8b-instant",
             "temperature": 0.3,
             "systemPrompt": SYSTEM_PROMPT,
             "tools": tools,

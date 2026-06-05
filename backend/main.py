@@ -24,13 +24,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Validate required env vars at startup
-_REQUIRED_ENV = ["OPENAI_API_KEY", "PINECONE_API_KEY", "PINECONE_INDEX_NAME"]
+_REQUIRED_ENV = ["GROQ_API_KEY", "COHERE_API_KEY", "PINECONE_API_KEY", "PINECONE_INDEX_NAME"]
 _missing = [k for k in _REQUIRED_ENV if not os.environ.get(k)]
 if _missing:
     raise RuntimeError(f"Missing required environment variables: {_missing}")
 
 from rag.chain import get_rag_context_for_vapi, stream_rag_response
-from calendar.calcom import get_availability, create_booking
+from calcom.calcom import get_availability, create_booking
 
 # ---------------------------------------------------------------------------
 # App setup
