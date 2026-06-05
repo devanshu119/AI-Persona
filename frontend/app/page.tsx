@@ -227,10 +227,8 @@ export default function Home() {
         <div className="section-header">
           <div className="section-label">📞 Voice Agent</div>
           <h2 className="section-title">Call My AI Representative</h2>
-          <p style={{ color: "var(--text-secondary)", marginTop: "12px", fontSize: "15px" }}>
-            Powered by Vapi.ai · ElevenLabs voice · &lt;2s first response · barge-in supported
-          </p>
         </div>
+
         <div className="voice-card">
           <div className="phone-icon-wrap">📞</div>
           <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
@@ -243,22 +241,8 @@ export default function Home() {
             The agent will introduce itself, answer your questions about Devanshu&apos;s background,
             and can book a meeting on the spot.
           </p>
-          <div className="voice-features">
-            {[
-              ["✅", "Natural intro and context-setting"],
-              ["✅", "RAG-grounded answers (no hallucination)"],
-              ["✅", "Handles interruptions and follow-ups"],
-              ["✅", "Real calendar booking mid-call"],
-              ["✅", "<2s first response latency"],
-              ["✅", "Graceful handling of unknowns"],
-            ].map(([icon, text]) => (
-              <div key={text} className="voice-feature">
-                <span className="voice-feature-icon">{icon}</span>
-                <span>{text}</span>
-              </div>
-            ))}
-          </div>
         </div>
+
       </section>
 
       {/* ── Booking ──────────────────────────────── */}
