@@ -11,7 +11,7 @@
 |-----------|------|
 | 📞 Voice Agent (Phone) | *(Set after Vapi setup)* |
 | 💬 Chat Interface | *(Set after Vercel deploy)* |
-| 📅 Direct Booking | https://cal.com/devanshu |
+| 📅 Direct Booking | https://cal.com/devanshu09 |
 | 🐙 GitHub | https://github.com/devanshu119 |
 
 ---
@@ -108,7 +108,7 @@ PINECONE_API_KEY=...
 PINECONE_INDEX_NAME=devanshu-persona
 CALCOM_API_KEY=...
 CALCOM_EVENT_TYPE_ID=...
-CALCOM_USERNAME=devanshu
+CALCOM_USERNAME=devanshu09
 GITHUB_TOKEN=ghp_...
 GITHUB_USERNAME=devanshu119
 FRONTEND_URL=https://your-app.vercel.app
@@ -170,7 +170,7 @@ cp .env.example .env.local
 ```env
 BACKEND_URL=https://your-backend.onrender.com
 NEXT_PUBLIC_BACKEND_URL=https://your-backend.onrender.com
-NEXT_PUBLIC_CALCOM_USERNAME=devanshu
+NEXT_PUBLIC_CALCOM_USERNAME=devanshu09
 ```
 
 ```bash

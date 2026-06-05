@@ -22,6 +22,7 @@ def get_embeddings() -> OpenAIEmbeddings:
     if _embeddings is None:
         _embeddings = OpenAIEmbeddings(
             model="text-embedding-3-small",
+            dimensions=1024,  # Match existing Pinecone index dimension
             openai_api_key=os.environ["OPENAI_API_KEY"],
         )
     return _embeddings
@@ -34,7 +35,7 @@ def get_or_create_index(index_name: str) -> None:
     if index_name not in existing:
         pc.create_index(
             name=index_name,
-            dimension=1536,  # text-embedding-3-small dimension
+            dimension=1024,  # text-embedding-3-small with custom dimensions=1024
             metric="cosine",
             spec=ServerlessSpec(cloud="aws", region="us-east-1"),
         )
