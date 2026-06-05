@@ -202,7 +202,7 @@ def main():
     print("\n[1/2] Creating Vapi assistant...")
     assistant = create_assistant(vapi_key, backend_url)
     assistant_id = assistant["id"]
-    print(f"✓ Assistant created: {assistant_id}")
+    print(f"[OK] Assistant created: {assistant_id}")
     print(f"  Name: {assistant['name']}")
 
     print("\n[2/2] Checking for existing phone numbers...")
@@ -217,9 +217,9 @@ def main():
         print(f"\nAssigning assistant to {first_number.get('number')}...")
         success = assign_assistant_to_number(vapi_key, first_number["id"], assistant_id)
         if success:
-            print(f"✓ Phone number assigned: {first_number.get('number')}")
+            print(f"[OK] Phone number assigned: {first_number.get('number')}")
         else:
-            print("⚠ Could not auto-assign. Assign manually in Vapi dashboard.")
+            print("[WARN] Could not auto-assign. Assign manually in Vapi dashboard.")
     else:
         print("No phone numbers found.")
         print("→ Go to https://dashboard.vapi.ai/phone-numbers")

@@ -12,7 +12,7 @@ interface Message {
 }
 
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://ai-persona-cr8c.onrender.com";
 
 const SUGGESTIONS = [
   "Why is Devanshu right for this role?",
