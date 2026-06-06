@@ -26,9 +26,9 @@ async def get_availability(
 ) -> dict:
     """
     Fetch available time slots from Cal.com for the next N days.
-    Uses Cal.com v2 /slots/available endpoint with username+eventSlug.
+    Uses Cal.com v2 public /slots/available endpoint (no auth needed).
     """
-    event_type_id = os.environ.get("CALCOM_EVENT_TYPE_ID", "")
+    event_type_id = os.environ.get("CALCOM_EVENT_TYPE_ID", "5912502")
     username = os.environ.get("CALCOM_USERNAME", "devanshu09")
     event_slug = os.environ.get("CALCOM_EVENT_SLUG", "30min")
     booking_url = f"https://cal.com/{username}/{event_slug}"
@@ -37,52 +37,41 @@ async def get_availability(
     start_time = now.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     end_time = (now + timedelta(days=days_ahead)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
-    # Try with eventTypeId first (if set), then fall back to username+eventSlug
-    urls_to_try = []
-    if event_type_id and event_type_id.isdigit():
-        urls_to_try.append({
-            "url": f"{CALCOM_BASE_URL}/slots/available",
-            "params": {"eventTypeId": event_type_id, "startTime": start_time, "endTime": end_time, "timeZone": timezone_str},
-        })
-    urls_to_try.append({
-        "url": f"{CALCOM_BASE_URL}/slots/available",
-        "params": {"username": username, "eventTypeSlug": event_slug, "startTime": start_time, "endTime": end_time, "timeZone": timezone_str},
-    })
+    url = f"{CALCOM_BASE_URL}/slots/available"
+    params = {
+        "eventTypeId": event_type_id,
+        "startTime": start_time,
+        "endTime": end_time,
+        "timeZone": timezone_str,
+    }
 
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
-            resp = None
-            for attempt in urls_to_try:
-                r = await client.get(attempt["url"], headers=_get_headers(), params=attempt["params"])
-                if r.status_code == 200:
-                    resp = r
-                    break
+            # Public endpoint — no auth header required
+            resp = await client.get(url, params=params)
 
-        if resp is None or resp.status_code != 200:
+        if resp.status_code != 200:
             return {
                 "available": True,
-                "message": f"Calendar is available Mon–Fri 9am–5pm IST. Book at {booking_url}",
+                "message": f"Calendar available Mon–Fri 9am–5pm IST. Book at {booking_url}",
                 "slots": [],
                 "booking_url": booking_url,
             }
 
         data = resp.json()
-        # v2 response: { "status": "success", "data": { "slots": { "2026-06-07": [...] } } }
         slots_raw = data.get("data", {}).get("slots", {})
 
         formatted_slots = []
         for date_str, slot_list in slots_raw.items():
             for slot in slot_list[:3]:  # Max 3 per day
-                slot_time_str = slot.get("time", slot) if isinstance(slot, dict) else slot
+                slot_time_str = slot.get("time", "") if isinstance(slot, dict) else slot
                 try:
-                    slot_time = datetime.fromisoformat(slot_time_str.replace("Z", "+00:00"))
-                    formatted_slots.append(
-                        {
-                            "date": date_str,
-                            "time_utc": slot_time_str,
-                            "time_readable": slot_time.strftime("%A, %B %d at %I:%M %p UTC"),
-                        }
-                    )
+                    slot_time = datetime.fromisoformat(slot_time_str)
+                    formatted_slots.append({
+                        "date": date_str,
+                        "time_utc": slot_time_str,
+                        "time_readable": slot_time.strftime("%A, %B %d at %I:%M %p IST"),
+                    })
                 except Exception:
                     pass
             if len(formatted_slots) >= 6:
@@ -91,20 +80,20 @@ async def get_availability(
         return {
             "available": len(formatted_slots) > 0,
             "slots": formatted_slots[:6],
-            "booking_url": f"https://cal.com/{username}",
+            "booking_url": booking_url,
             "message": (
                 f"Found {len(formatted_slots)} available slots in the next {days_ahead} days."
                 if formatted_slots
-                else f"No available slots found. Book directly at https://cal.com/{username}"
+                else f"No open slots this week. Book at {booking_url}"
             ),
         }
 
     except Exception as e:
         return {
-            "available": False,
-            "message": f"Availability check failed: {str(e)}. Book at https://cal.com/{username}",
+            "available": True,
+            "message": f"Calendar available Mon–Fri 9am–5pm IST. Book at {booking_url}",
             "slots": [],
-            "booking_url": f"https://cal.com/{username}",
+            "booking_url": booking_url,
         }
 
 
