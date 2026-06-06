@@ -12,8 +12,10 @@ interface Message {
 }
 
 // Call Render backend directly — CORS is set to * in main.py so this is safe from the browser
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "https://ai-persona-cr8c.onrender.com";
+// Strip trailing slash to avoid double-slash URLs (e.g. onrender.com//rag-query → 404)
+const BACKEND_URL = (
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://ai-persona-cr8c.onrender.com"
+).replace(/\/$/, "");
 
 const SUGGESTIONS = [
   "Why is Devanshu right for this role?",
