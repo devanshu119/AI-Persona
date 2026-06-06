@@ -1,4 +1,4 @@
-# Devanshu's AI Persona — Scaler AI Engineer Screening
+# AI Persona
 
 > **Live System**: Voice Agent + RAG Chat Interface + Real Calendar Booking  
 > Built by [Devanshu Verma](https://github.com/devanshu119) · IIIT Una · 2025
@@ -302,4 +302,3 @@ AI-Persona/
 
 ---
 
-*Built with ❤️ for the Scaler AI Engineer role — Devanshu Verma, IIIT Una 2027*
