@@ -78,7 +78,7 @@ export default function Home() {
         <div className="hero-content">
           <div className="hero-badge">
             <span className="hero-badge-dot" />
-            AI Persona · RAG-grounded · Live Calendar Booking
+            AI Persona · Live Chat & Booking
           </div>
 
           <h1 className="hero-title">

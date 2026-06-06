@@ -11,8 +11,8 @@ interface Message {
   timestamp: Date;
 }
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "https://ai-persona-cr8c.onrender.com";
+// Use the Next.js API route as a proxy to avoid CORS issues with direct browser→Render calls
+const CHAT_API_URL = "/api/chat";
 
 const SUGGESTIONS = [
   "Why is Devanshu right for this role?",
@@ -71,7 +71,7 @@ export default function ChatWidget() {
       ]);
 
       try {
-        const response = await fetch(`${BACKEND_URL}/rag-query`, {
+        const response = await fetch(CHAT_API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query: text.trim(), stream: true }),
@@ -115,14 +115,17 @@ export default function ChatWidget() {
         if (!fullContent) {
           throw new Error("Empty response");
         }
-      } catch {
+      } catch (err: unknown) {
+        const errMsg = err instanceof Error ? err.message : "";
+        const isColdStart = errMsg.includes("waking up") || errMsg.includes("503");
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantId
               ? {
                   ...m,
-                  content:
-                    "I'm having trouble connecting to the knowledge base right now. Please try again, or call the phone number to speak with me directly.",
+                  content: isColdStart
+                    ? "⏳ The backend is waking up from sleep (Render free tier). Please **try again in ~30 seconds** — it'll be fast after that!"
+                    : "I'm having trouble connecting to the knowledge base right now. Please try again, or call the phone number to speak with me directly.",
                 }
               : m
           )
@@ -158,7 +161,7 @@ export default function ChatWidget() {
           <h3>Devanshu&apos;s AI Representative</h3>
           <p>
             <span className="status-dot" />
-            Online · RAG-grounded · Real calendar booking
+            Online · Ask me anything
           </p>
         </div>
       </div>
