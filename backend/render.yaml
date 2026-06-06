@@ -6,7 +6,9 @@ services:
     plan: free
     healthCheckPath: /health
     envVars:
-      - key: OPENAI_API_KEY
+      - key: GROQ_API_KEY
+        sync: false
+      - key: COHERE_API_KEY
         sync: false
       - key: PINECONE_API_KEY
         sync: false
@@ -15,9 +17,9 @@ services:
       - key: CALCOM_API_KEY
         sync: false
       - key: CALCOM_EVENT_TYPE_ID
-        sync: false
+        value: "5912502"
       - key: CALCOM_USERNAME
-        value: devanshu
+        value: devanshu09
       - key: GITHUB_TOKEN
         sync: false
       - key: GITHUB_USERNAME
