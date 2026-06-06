@@ -1,7 +1,7 @@
 # AI Persona
 
 > **Live System**: Voice Agent + RAG Chat Interface + Real Calendar Booking  
-> Built by [Devanshu Verma](https://github.com/devanshu119) · IIIT Una · 2025
+
 
 ---
 
