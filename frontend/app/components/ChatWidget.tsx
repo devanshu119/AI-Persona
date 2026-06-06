@@ -11,8 +11,9 @@ interface Message {
   timestamp: Date;
 }
 
-// Use the Next.js API route as a proxy to avoid CORS issues with direct browser→Render calls
-const CHAT_API_URL = "/api/chat";
+// Call Render backend directly — CORS is set to * in main.py so this is safe from the browser
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://ai-persona-cr8c.onrender.com";
 
 const SUGGESTIONS = [
   "Why is Devanshu right for this role?",
@@ -71,7 +72,8 @@ export default function ChatWidget() {
       ]);
 
       try {
-        const response = await fetch(CHAT_API_URL, {
+        // Try streaming first
+        const response = await fetch(`${BACKEND_URL}/rag-query`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query: text.trim(), stream: true }),
@@ -85,17 +87,25 @@ export default function ChatWidget() {
         if (!reader) throw new Error("No response body");
 
         let fullContent = "";
+        let buffer = "";
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split("\n").filter((l) => l.startsWith("data: "));
+          // Accumulate chunks — SSE lines may span multiple reads
+          buffer += decoder.decode(value, { stream: true });
+
+          // Process complete lines from buffer
+          const lines = buffer.split("\n");
+          // Keep the last (potentially incomplete) line in buffer
+          buffer = lines.pop() ?? "";
 
           for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data: ")) continue;
             try {
-              const data = JSON.parse(line.slice(6));
+              const data = JSON.parse(trimmed.slice(6));
               if (data.token) {
                 fullContent += data.token;
                 setMessages((prev) =>
@@ -104,32 +114,50 @@ export default function ChatWidget() {
                   )
                 );
               }
-              if (data.done || data.error) break;
+              if (data.done) break;
+              if (data.error) throw new Error(data.error);
             } catch {
               // Skip malformed SSE lines
             }
           }
         }
 
-        // If no content received (backend offline), show fallback
-        if (!fullContent) {
-          throw new Error("Empty response");
+        if (!fullContent) throw new Error("empty_stream");
+
+      } catch (streamErr) {
+        // Streaming failed — fall back to non-streaming call
+        try {
+          const fallbackResp = await fetch(`${BACKEND_URL}/rag-query`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: text.trim(), stream: false }),
+          });
+
+          if (!fallbackResp.ok) throw new Error(`HTTP ${fallbackResp.status}`);
+
+          const data = await fallbackResp.json();
+          const answer = data.answer || "Sorry, I couldn't generate a response.";
+
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId ? { ...m, content: answer } : m
+            )
+          );
+        } catch {
+          // Both streaming and non-streaming failed
+          console.error("Both stream and fallback failed", streamErr);
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId
+                ? {
+                    ...m,
+                    content:
+                      "I'm having trouble connecting to the knowledge base right now. Please try again, or call the phone number to speak with me directly.",
+                  }
+                : m
+            )
+          );
         }
-      } catch (err: unknown) {
-        const errMsg = err instanceof Error ? err.message : "";
-        const isColdStart = errMsg.includes("waking up") || errMsg.includes("503");
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantId
-              ? {
-                  ...m,
-                  content: isColdStart
-                    ? "⏳ The backend is waking up from sleep (Render free tier). Please **try again in ~30 seconds** — it'll be fast after that!"
-                    : "I'm having trouble connecting to the knowledge base right now. Please try again, or call the phone number to speak with me directly.",
-                }
-              : m
-          )
-        );
       } finally {
         setIsLoading(false);
         inputRef.current?.focus();
