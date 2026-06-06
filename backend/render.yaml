@@ -18,6 +18,8 @@ services:
         sync: false
       - key: CALCOM_EVENT_TYPE_ID
         value: "5912502"
+      - key: CALCOM_EVENT_SLUG
+        value: 30min
       - key: CALCOM_USERNAME
         value: devanshu09
       - key: GITHUB_TOKEN

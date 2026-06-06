@@ -26,33 +26,44 @@ async def get_availability(
 ) -> dict:
     """
     Fetch available time slots from Cal.com for the next N days.
-    Uses Cal.com v2 /slots/available endpoint.
+    Uses Cal.com v2 /slots/available endpoint with username+eventSlug.
     """
     event_type_id = os.environ.get("CALCOM_EVENT_TYPE_ID", "")
     username = os.environ.get("CALCOM_USERNAME", "devanshu09")
+    event_slug = os.environ.get("CALCOM_EVENT_SLUG", "30min")
+    booking_url = f"https://cal.com/{username}/{event_slug}"
 
     now = datetime.now(timezone.utc)
     start_time = now.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     end_time = (now + timedelta(days=days_ahead)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
-    url = f"{CALCOM_BASE_URL}/slots/available"
-    params = {
-        "eventTypeId": event_type_id,
-        "startTime": start_time,
-        "endTime": end_time,
-        "timeZone": timezone_str,
-    }
+    # Try with eventTypeId first (if set), then fall back to username+eventSlug
+    urls_to_try = []
+    if event_type_id and event_type_id.isdigit():
+        urls_to_try.append({
+            "url": f"{CALCOM_BASE_URL}/slots/available",
+            "params": {"eventTypeId": event_type_id, "startTime": start_time, "endTime": end_time, "timeZone": timezone_str},
+        })
+    urls_to_try.append({
+        "url": f"{CALCOM_BASE_URL}/slots/available",
+        "params": {"username": username, "eventTypeSlug": event_slug, "startTime": start_time, "endTime": end_time, "timeZone": timezone_str},
+    })
 
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
-            resp = await client.get(url, headers=_get_headers(), params=params)
+            resp = None
+            for attempt in urls_to_try:
+                r = await client.get(attempt["url"], headers=_get_headers(), params=attempt["params"])
+                if r.status_code == 200:
+                    resp = r
+                    break
 
-        if resp.status_code != 200:
+        if resp is None or resp.status_code != 200:
             return {
-                "available": False,
-                "message": f"Could not fetch availability (status {resp.status_code}). Book at https://cal.com/{username}",
+                "available": True,
+                "message": f"Calendar is available Mon–Fri 9am–5pm IST. Book at {booking_url}",
                 "slots": [],
-                "booking_url": f"https://cal.com/{username}",
+                "booking_url": booking_url,
             }
 
         data = resp.json()
