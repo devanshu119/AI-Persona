@@ -225,8 +225,10 @@ def main():
     print()
     print("RAGAS Scores:")
     for metric, score in ragas_scores.items():
-        if score is not None:
+        if score is not None and isinstance(score, (int, float)):
             print(f"  {metric}: {score:.4f}")
+        elif score is not None:
+            print(f"  {metric}: {score}")
     print()
     print("Latency:")
     for stat, val in latency_stats.items():
